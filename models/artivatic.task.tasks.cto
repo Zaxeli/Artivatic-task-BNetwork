@@ -1,0 +1,28 @@
+namespace artivatic.task.tasks
+
+import artivatic.task.participants.*
+
+asset Task identified by taskId {
+  o String taskId
+  o String technology
+  o String link
+  --> Student student 
+  --> Evaluator[] approvals optional
+}
+
+// Only Student can upload a task by giving a link to the task content (e.g. github repository)
+transaction UploadTask {
+  o String taskId
+  o String link
+  o String technology
+}
+
+// Add the transaction-initiating evaluator to the task as an approval in the 'Task.evaluators' field
+transaction ApproveTask {
+  o String taskId
+}
+
+// The evaluator can rescind their approval in case some new unfavorable information comes to light (e.g. cheating, plagiarism, etc,)
+transaction RescindApproval {
+  o String taskId
+}

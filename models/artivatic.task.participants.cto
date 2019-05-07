@@ -1,0 +1,18 @@
+namespace artivatic.task.participants
+
+participant Student identified by studentId {
+  o String studentId
+
+}
+
+participant Evaluator identified by evaluatorId {
+  o String evaluatorId
+  o Technology[] technologies
+}
+
+
+// Technology skill level for Evaluators
+concept Technology {
+  o String techName
+  o Integer rating
+}

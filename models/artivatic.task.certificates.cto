@@ -1,0 +1,18 @@
+namespace artivatic.task.certificates
+
+import artivatic.task.participants.*
+import artivatic.task.tasks.*
+
+
+asset Certificate identified by certificateId {
+  o String certificateId
+  o String technology
+  o DateTime issuedOn
+  --> Student student
+  --> Evaluator[] mentors
+}
+
+transaction IssueCertificate {
+  o String certificateId
+  --> Task task
+}

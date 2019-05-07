@@ -1,0 +1,108 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Sample access control list.
+ */
+rule EverybodyCanReadEverything {
+    description: "Allow all participants read access to all resources"
+    participant: "ANY"
+    operation: READ
+    resource: "artivatic.task.**"
+    action: ALLOW
+}
+
+rule EverybodyCanSubmitTransactions {
+    description: "Allow all participants to submit transactions"
+    participant: "artivatic.task.SampleParticipant"
+    operation: CREATE
+    resource: "artivatic.task.SampleTransaction"
+    action: ALLOW
+}
+
+rule SystemACL {
+  description:  "System ACL to permit all access"
+  participant: "org.hyperledger.composer.system.Participant"
+  operation: ALL
+  resource: "org.hyperledger.composer.system.**"
+  action: ALLOW
+}
+
+rule NetworkAdminUser {
+    description: "Grant business network administrators full access to user resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "**"
+    action: ALLOW
+}
+
+rule NetworkAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule TaskUpload {
+  description: "Only Students can upload tasks using transaction"
+  participant: "artivatic.task.participants.Student"
+  operation: CREATE,READ
+  resource: "artivatic.task.tasks.Task"
+  transaction: "artivatic.task.tasks.UploadTask"
+  action: ALLOW
+}
+
+rule TaskApprove {
+  description: "Only evaluators can approve task using trasaction"
+  participant: "artivatic.task.participants.Evaluator"
+  operation: CREATE,READ
+  resource: "artivatic.task.tasks.Task"
+  transaction: "artivatic.task.tasks.ApproveTask"
+  action: ALLOW
+}
+
+rule TaskApprovalRescind {
+  description: "Only Evaluator can remove their own approval for a Task using transaction"
+  participant: "artivatic.task.participants.Evaluator"
+  operation: CREATE,READ
+  resource: "artivatic.task.tasks.Task"
+  transaction: "artivatic.task.tasks.RescindApproval"
+  action: ALLOW
+}
+
+rule TaskDirectInaccessible {
+  description: "Task asset type is not directly accessible for create or update"
+  participant: "ANY"
+  operation: CREATE,UPDATE
+  resource: "artivatic.task.tasks.Task"
+  action: DENY
+}
+
+rule IssueCertificate {
+  description: "Anyone can issue once 5 approvals are reached, certificate may only be issued through the transaction which should checks for 5 approvals"
+  participant: "ANY"
+  operation: CREATE
+  resource: "artivatic.task.certificates.Certificate"
+  transaction: "artivatic.task.certificates.IssueCertificate"
+  action: ALLOW
+}
+
+rule CertificateDirectInaccessible {
+  description: "Certificate cannot be directly operated upon"
+  participant: "ANY"
+  operation: ALL
+  resource: "artivatic.task.certificates.Certificate"
+  action: DENY
+}
