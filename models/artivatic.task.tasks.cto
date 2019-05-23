@@ -20,6 +20,7 @@ transaction UploadTask {
 // Add the transaction-initiating evaluator to the task as an approval in the 'Task.evaluators' field
 transaction ApproveTask {
   o String taskId
+  o String evaluatorId default  = ''
 }
 
 // The evaluator can rescind their approval in case some new unfavorable information comes to light (e.g. cheating, plagiarism, etc,)
